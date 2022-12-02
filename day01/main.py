@@ -2,7 +2,7 @@
 sum = 0
 maxSum = 0
 
-with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day1/input.txt","r") as input:
+with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day01/input.txt","r") as input:
     line = input.readline()
     while line:
         if (line == "\n"):
@@ -22,7 +22,7 @@ sum = 0
 count = 0
 maxSums = [0,0,0]
 
-with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day1/input.txt","r") as input:
+with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day01/input.txt","r") as input:
     line = input.readline()
     while line:
         if (line == "\n"):
