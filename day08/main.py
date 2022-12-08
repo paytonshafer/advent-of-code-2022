@@ -16,26 +16,31 @@ with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day08/input.
                 else:
                     passed = 0
                     current = int(lines[i][j])
+
                     for k in range(1,len(lines[i])-1-j):
                         right = int(lines[i][j+k])
                         if current <= right:
                             passed += 1
                             break
+
                     for k in range(1,j+1):
                         left = int(lines[i][j-k])
                         if current <= left:
                             passed += 1
                             break
+
                     for k in range(1,i+1):
                         above = int(lines[i-k][j])
                         if current <= above:
                             passed += 1
                             break
+
                     for k in range(1, len(lines)-i):
                         below = int(lines[i+k][j])
                         if current <= below:
                             passed += 1
                             break
+
                     if not (passed == 4):
                         sum += 1
 print(sum)
@@ -57,9 +62,11 @@ with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day08/input.
                 else:
                     current = int(lines[i][j])
                     count = 0
+
                     for k in range(1,len(lines[i])-1-j):
                         right = int(lines[i][j+k])
                         count += 1
+
                         if current <= right:
                             score *= count
                             count = 0
@@ -67,9 +74,11 @@ with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day08/input.
                         elif k == len(lines[i])-2-j:
                             score *= count
                             count = 0
+
                     for k in range(1,j+1):
                         left = int(lines[i][j-k])
                         count += 1
+
                         if current <= left:
                             score *= count
                             count = 0
@@ -77,9 +86,11 @@ with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day08/input.
                         elif k == j:
                             score *= count
                             count = 0
+
                     for k in range(1,i+1):
                         above = int(lines[i-k][j])
                         count += 1
+
                         if current <= above:
                             score *= count
                             count = 0
@@ -87,9 +98,11 @@ with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day08/input.
                         elif k == i:
                             score *= count
                             count = 0
+
                     for k in range(1, len(lines)-i):
                         below = int(lines[i+k][j])
                         count += 1
+
                         if current <= below:
                             score *= count
                             count = 0
@@ -97,7 +110,9 @@ with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day08/input.
                         elif k == len(lines)-i-1:
                             score *= count
                             count = 0
+
                     if score > max:
                         max = score
+                        
                     score = 1
 print(max)
