@@ -21,7 +21,7 @@ with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day03/input.
     print(sum)
 
 #part 2
-sum = 0 
+sum = 0 #reset sum to 0
 
 with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day03/input.txt","r") as input:
     line = input.readline()
