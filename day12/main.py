@@ -1,106 +1,42 @@
-from collections import defaultdict
+from networkx import grid_2d_graph
+from networkx import shortest_path
 
-#read map
-def read_edges():
-    with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day12/input.txt","r") as input:
-        lines = input.readlines()
-        edges = []
-        top, bottom, left, right = True, True, True, True
+#read grid
+with open("/Users/paytonshafer/Documents/GitHub/advent-of-code-2022/day12/input.txt") as input:
+    grid = [list(x.strip()) for x in input]
 
-        for j, line in enumerate(lines):
-            if j == 0:
-                top = False
-            elif j == len(lines)-1:
-                bottom = False
-            else:
-                top, bottom = True, True
-            
-            for i, c in enumerate(line):
-                if i == 0:
-                    left = False
-                elif i == len(line)-2:
-                    right = False
-                elif i == len(line)-1:
-                    break
-                else:
-                    left, right = True, True
+#make graph
+source = None
+sources = []
+goal = None
+for row_n, row in enumerate(grid):
+    for col_n, c in enumerate(row):
+        if c == "S":
+            source = (row_n, col_n)
+            grid[row_n][col_n] = "a"
+        if c == "E":
+            goal = (row_n, col_n)
+            grid[row_n][col_n] = "z"
+        if grid[row_n][col_n] == "a":
+            sources.append((row_n, col_n))
 
-                if c == "S":
-                    if lines[j-1][i] == "a":
-                        edges.append([str(i) + str(j), str(j-1) + str(i)])
-                    if lines[j+1][i] == "a":
-                        edges.append([str(i) + str(j), str(j+1) + str(i)])
-                    if lines[j][i+1] == "a":
-                        edges.append([str(i) + str(j), str(j) + str(i+1)])
-                
-                if c == "E":
-                    if lines[j-1][i] == "z":
-                        edges.append([str(i) + str(j), str(j-1) + str(i)])
-                    if lines[j+1][i] == "z":
-                        edges.append([str(i) + str(j), str(j+1) + str(i)])
-                    if lines[j][i+1] == "z":
-                        edges.append([str(i) + str(j), str(j) + str(i+1)])
-                    if lines[j][i-1] == "z":
-                        edges.append([str(i) + str(j), str(j) + str(i-1)])
+g = grid_2d_graph(len(grid), len(grid[0]))
 
-                if top and (ord(c) + 1 == ord(lines[j-1][i]) or ord(c) >= ord(lines[j-1][i])) and not(lines[j-1][i] == "S" or lines[j-1][i] == "E"):
-                    edges.append([str(i) + str(j), str(j-1) + str(i)])
-                
-                if bottom and (ord(c) + 1 == ord(lines[j+1][i]) or ord(c) >= ord(lines[j+1][i])) and not(lines[j+1][i] == "S" or lines[j+1][i] == "E"):
-                    edges.append([str(i) + str(j), str(j+1) + str(i)])
+grid = [[ord(c)-ord("a") for c in row] for row in grid]
+def weight_func(a, b, edge_dict):
+    if grid[a[0]][a[1]] < grid[b[0]][b[1]] - 1:
+        return None
+    return 1
 
-                if right and (ord(c) + 1 == ord(lines[j][i+1]) or ord(c) >= ord(lines[j][i+1])) and not(lines[j][i+1] == "S" or lines[j][i+1] == "E"):
-                    edges.append([str(i) + str(j), str(j) + str(i+1)])
+#part 1
+print(len(shortest_path(g, source, goal, weight_func))-1)
 
-                if left and (ord(c) + 1 == ord(lines[j][i-1]) or ord(c) >= ord(lines[j][i-1])) and not(lines[j][i-1] == "S" or lines[j][i-1] == "E"):
-                    edges.append([str(i) + str(j), str(j) + str(i-1)])
-    return edges
-                
-edges = read_edges()
+#part2
+paths = []
+for s in sources:
+    try:
+        paths.append(len(shortest_path(g, s, goal, weight_func))-1)
+    except:
+        pass
 
-def make_graph(edges):
-    graph = defaultdict(list)
-
-    for edge in edges:
-        a, b = edge[0], edge[1]
-         
-        graph[a].append(b)
-        graph[b].append(a)
-
-    return graph
-
-graph = make_graph(edges)
-
-for list in graph.values():
-    l = [*set(list)]
-    list = l
-
-def BFS_SP(graph, start, goal):
-    explored = []
-    queue = [[start]]
-     
-    if start == goal:
-        return
-    
-    while queue:
-        path = queue.pop(0)
-        node = path[-1]
-        
-        if node not in explored:
-            neighbours = graph[node]
-            
-            for neighbour in neighbours:
-                new_path = list(path)
-                new_path.append(neighbour)
-                queue.append(new_path)
-            
-                if neighbour == goal:
-                        print("Shortest path = ", *new_path)
-                        return
-            explored.append(node)
-
-    print("So sorry, but a connecting path doesn't exist :(")
-    return
-
-BFS_SP(graph, "S", "E")
-print(graph["01"])
+print(min(paths))
